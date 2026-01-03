@@ -1,4 +1,4 @@
-import Banner from "./components/banner"
+import Banner from "./components/Banner"
 import Categories from "./components/Categories"
 import Description from "./components/Description"
 import Experience from "./components/Experience"

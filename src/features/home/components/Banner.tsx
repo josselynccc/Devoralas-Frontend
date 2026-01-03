@@ -1,7 +1,16 @@
-import { useEffect, useState } from "react";
-import table from '../../../assets/table.png';
-const img = 'https://e-an.americatv.com.pe/redes-sociales-dia-hamburguesa-peruana-ofreceran-hamburguesas-gratis-esta-cadena-restaurantes-n393109-938x528-625535.jpg';
-const slides = [
+import { useEffect, useState, type JSX } from "react";
+import table from "../../../assets/table.png";
+
+const img =
+  "https://e-an.americatv.com.pe/redes-sociales-dia-hamburguesa-peruana-ofreceran-hamburguesas-gratis-esta-cadena-restaurantes-n393109-938x528-625535.jpg";
+
+interface Slide {
+  name: string;
+  description: string;
+  image: string;
+}
+
+const slides: Slide[] = [
   {
     name: "La Devórala Clásica",
     description:
@@ -34,10 +43,10 @@ const slides = [
   },
 ];
 
-export default function Banner() {
-  const [current, setCurrent] = useState(0);
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
+export default function Banner(): JSX.Element {
+  const [current, setCurrent] = useState<number>(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   /* ---------------- AUTO SLIDE ---------------- */
   useEffect(() => {
@@ -51,27 +60,29 @@ export default function Banner() {
   /* ---------------- SWIPE MOBILE ---------------- */
   const minSwipeDistance = 50;
 
-  const onTouchStart = (e) => {
+  const onTouchStart = (
+    e: React.TouchEvent<HTMLOptionElement>
+  ): void => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
 
-  const onTouchMove = (e) => {
+  const onTouchMove = (
+    e: React.TouchEvent<HTMLOptionElement>
+  ): void => {
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+  const onTouchEnd = (): void => {
+    if (touchStart === null || touchEnd === null) return;
 
     const distance = touchStart - touchEnd;
 
     if (distance > minSwipeDistance) {
-      // swipe izquierda → siguiente
       setCurrent((prev) => (prev + 1) % slides.length);
     }
 
     if (distance < -minSwipeDistance) {
-      // swipe derecha → anterior
       setCurrent((prev) =>
         prev === 0 ? slides.length - 1 : prev - 1
       );
@@ -87,14 +98,14 @@ export default function Banner() {
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {/* Fondo base (luego va la tabla de madera) */}
-      <div 
+      {/* Fondo madera */}
+      <div
         className="absolute inset-0"
-        style={{ 
+        style={{
           backgroundImage: `url(${table})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       />
       <div className="absolute inset-0 bg-black/60" />
@@ -102,8 +113,6 @@ export default function Banner() {
       {/* Contenido */}
       <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-6">
         <div className="grid w-full items-center gap-12 md:grid-cols-2">
-          
-          {/* IMAGEN IZQUIERDA */}
           <div className="flex justify-center">
             <img
               key={slide.image}
@@ -113,7 +122,6 @@ export default function Banner() {
             />
           </div>
 
-          {/* TEXTO DERECHA */}
           <div className="space-y-6 text-white">
             <span className="uppercase tracking-widest text-sm text-[var(--color-secondary)]">
               Platillo estrella
@@ -123,9 +131,7 @@ export default function Banner() {
               {slide.name}
             </h1>
 
-            <p className="max-w-md text-white/80">
-              {slide.description}
-            </p>
+            <p className="max-w-md text-white/80">{slide.description}</p>
 
             <div className="flex flex-wrap gap-4 pt-4">
               <button className="bg-[var(--color-secondary)] px-6 py-3 font-semibold uppercase text-black hover:scale-105 transition">
@@ -136,7 +142,6 @@ export default function Banner() {
               </button>
             </div>
 
-            {/* INDICADORES */}
             <div className="flex gap-2 pt-6">
               {slides.map((_, index) => (
                 <button
@@ -152,7 +157,6 @@ export default function Banner() {
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </section>
